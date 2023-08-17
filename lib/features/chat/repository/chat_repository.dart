@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:messwenger/common/provider/message_reply_provider.dart';
 import 'package:messwenger/common/respository/comon_firebase_respository.dart';
 import 'package:messwenger/common/utls/utls.dart';
 import 'package:messwenger/models/chat_contact.dart';
@@ -95,6 +96,10 @@ snapshots().map((event) {
     required String username,
     required String recieverusername,
     required MessageEnum messageType,
+    required MessageReplay? messageReplay,
+    required String senderUsername,
+    required MessageEnum repliedmessagetype
+    
   })async{
     final message=Message(senderId: auth.currentUser!.uid,
      recieverid: recieveruserId,
@@ -102,7 +107,10 @@ snapshots().map((event) {
       type:messageType ,
        timeSent: timesent,
        messageId: messageId,
-        isSeen: false,
+        isSeen: false, 
+        repliedmessagetype: repliedmessagetype,
+         repliedmessagge: messageReplay==null? '':messageReplay.message, 
+         repliedto: messageReplay==null? '' : messageReplay.isMe ? senderUsername: recieverusername,
          );
 
          await firestore.collection('users').
@@ -123,7 +131,8 @@ snapshots().map((event) {
      required BuildContext context,
      required String text,
      required String recieveruserId,
-     required UserModel senderuser
+     required UserModel senderuser,
+     required MessageReplay? messageReplay,
     }
   )async{
     try {
@@ -144,6 +153,9 @@ snapshots().map((event) {
         messageType: MessageEnum.text,
          recieverusername: recieveruserData.name,
           username: senderuser.name,
+           messageReplay: messageReplay,
+            repliedmessagetype: messageReplay==null ?MessageEnum.text: messageReplay.messageEnum,
+             senderUsername:senderuser.name,
           
 
 
@@ -164,7 +176,8 @@ snapshots().map((event) {
     required String recieveruserId,
     required UserModel senderuserData,
     required ProviderRef ref,
-    required MessageEnum messageEnum
+    required MessageEnum messageEnum,
+    required MessageReplay ? messageReplay
   })async{
     try {
       var timesent =DateTime.now();
@@ -207,7 +220,10 @@ snapshots().map((event) {
             timesent: timesent,
              messageId: messageId, username: senderuserData.uid,
               recieverusername: recieveruserData.name,
-               messageType: messageEnum);
+               messageType: messageEnum,
+                repliedmessagetype: messageEnum,
+                 messageReplay: messageReplay,
+                  senderUsername: senderuserData.name);
       
     } catch (e) {
       showsnackbar(context: context, content: e.toString());

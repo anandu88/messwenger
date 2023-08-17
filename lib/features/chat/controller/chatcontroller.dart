@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:messwenger/common/enums/messages_enum.dart';
+import 'package:messwenger/common/provider/message_reply_provider.dart';
 import 'package:messwenger/features/auth/controller/authcontroller.dart';
 import 'package:messwenger/features/chat/repository/chat_repository.dart';
 import 'package:messwenger/models/chat_contact.dart';
@@ -24,11 +25,13 @@ class Chatcontroller {
 
   void sendTextmessage(BuildContext context,
   String text,String recieveruserId){
+    final messageReplay=ref.read(messageReplayProvider);
     ref.read(userDataAuthprovider).whenData((value) => 
      chatRepository.sendTextmessage(context: context,
      text: text,
       recieveruserId: recieveruserId,
-       senderuser: value!));
+       senderuser: value!, 
+       messageReplay: messageReplay));
     
   }
 
@@ -40,6 +43,7 @@ class Chatcontroller {
   }
   void sendfilemessage(BuildContext context,
   File file,String recieveruserId,MessageEnum messageEnum){
+     final messageReplay=ref.read(messageReplayProvider);
     ref.read(userDataAuthprovider).whenData((value) => 
      chatRepository.sendFilemessage(context: context,
      
@@ -47,7 +51,8 @@ class Chatcontroller {
        file:file,
         messageEnum: messageEnum,
          ref: ref,
-          senderuserData:value!,
+          senderuserData:value!, 
+          messageReplay: messageReplay,
        ));
     
   }

@@ -4,13 +4,14 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:messwenger/common/widgets/loader.dart';
-import 'package:messwenger/common/widgets/sender_messagecard.dart';
+
 import 'package:messwenger/features/chat/controller/chatcontroller.dart';
+import 'package:messwenger/features/chat/widgets/sender_messagecard.dart';
 import 'package:messwenger/models/message.dart';
 
 
 import '../../../info.dart';
-import '../../../common/widgets/my_message_card.dart';
+import 'my_message_card.dart';
 
 class ChatList extends ConsumerStatefulWidget {
   final String recieveruserId;
@@ -52,12 +53,18 @@ class _ChatListState extends ConsumerState<ChatList> {
             if (messageData.senderId==FirebaseAuth.instance.currentUser!.uid) {
               return MyMessageCard(
                 message:messageData.text,
-                date:DateFormat.Hm().format(messageData.timeSent)
+                date:DateFormat.Hm().format(messageData.timeSent), type: messageData.type,
+                 onleftswipe: () {  }, 
+                 repliedText: messageData.repliedmessagge,
+
+                  repliedmessagetype: messageData.repliedmessagetype,
+
+                  username:messageData.repliedto,
               );
             }
             return SenderMessageCard(
               message: messageData.text,
-              date: messages[index]['time'].toString(),
+              date: messages[index]['time'].toString(), type: messageData.type,
             );
           },
         );

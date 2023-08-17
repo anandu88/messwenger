@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:messwenger/common/enums/messages_enum.dart';
+import 'package:messwenger/features/chat/widgets/display_filesand_text.dart';
 
 
-import '../utls/colors.dart';
+import '../../../common/utls/colors.dart';
 
 class MyMessageCard extends StatelessWidget {
   final String message;
   final String date;
+  final MessageEnum type;
+ final  VoidCallback onleftswipe;
+ final String repliedText;
+ final String username;
+ final MessageEnum repliedmessagetype;
 
-  const MyMessageCard({Key? key, required this.message, required this.date}) : super(key: key);
+  const MyMessageCard({Key? key,
+   required this.message,
+    required this.date,
+    required this.type, required this.onleftswipe,
+     required this.repliedText,
+      required this.username, 
+      required this.repliedmessagetype})
+       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +39,18 @@ class MyMessageCard extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(
+                padding: type == MessageEnum.text? const EdgeInsets.only(
                   left: 10,
                   right: 30,
                   top: 5,
                   bottom: 20,
+                ):const EdgeInsets.only(
+                  left: 5,
+                  top: 5,
+                  right: 5,
+                  bottom: 25
                 ),
-                child: Text(
-                  message,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
+                child: DisplayTextandFiles(message: message, type: type),
               ),
               Positioned(
                 bottom: 4,
